@@ -3,7 +3,9 @@ package org.factoriaf5.filmcity.controllers;
 import org.factoriaf5.filmcity.domain.Movie;
 import org.factoriaf5.filmcity.repositories.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+//import org.springframework.web.bind.annotation.*; // No se si hace falta. sustituye las 2 lineas siguientes
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
