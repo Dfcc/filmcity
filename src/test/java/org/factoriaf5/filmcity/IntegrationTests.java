@@ -81,6 +81,27 @@ class IntegrationTests {
 
         movieRepository.saveAll(movies);
     }
+
+    @Test
+    void allowsToAddANewMovie() throws Exception {
+        mockMvc.perform(post("/movies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{" +
+                        "\"title\": \"Jurassic Park 3\", " +
+                        "\"director\": \"Steven Aberkani\", " +
+                        "\"year\": "+ 1995 +", " +
+                        "\"synopsis\": \"Java\"}")
+        ).andExpect(status().isOk());
+
+        List<Movie> movies = movieRepository.findAll();
+        assertThat(movies, contains(allOf(
+                hasProperty("title", is("Jurassic Park 3")),
+                hasProperty("director", is("Steven Aberkani")),
+                hasProperty("year", is(1995)),
+                hasProperty("synopsis", is("Java"))
+        )));
+    }
+
     @Test
     void deleteMovieById() throws Exception {
         Movie movie = movieRepository.save(new Movie("Jurassic Park", "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/oU7Oq2kFAAlGqbU4VoAE36g4hoI.jpg", "Steven Spielberg", 1993, "A wealthy entrepreneur secretly creates a theme park featuring living dinosaurs drawn from prehistoric DNA.", null, false));
