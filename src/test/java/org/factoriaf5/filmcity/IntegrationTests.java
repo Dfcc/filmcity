@@ -89,9 +89,10 @@ class IntegrationTests {
                 .content("{" +
                         "\"title\": \"Jurassic Park 3\", " +
                         "\"director\": \"Steven Aberkani\", " +
-                        "\"year\": "+ 1995 +", " +
+                        "\"year\":  "+1995+" , " +
                         "\"synopsis\": \"Java\"}")
-        ).andExpect(status().isOk());
+        ).andExpect(status().isOk())
+        .andDo(print());
 
         List<Movie> movies = movieRepository.findAll();
         assertThat(movies, contains(allOf(
@@ -100,6 +101,7 @@ class IntegrationTests {
                 hasProperty("year", is(1995)),
                 hasProperty("synopsis", is("Java"))
         )));
+
     }
 
     @Test
