@@ -78,5 +78,13 @@ public class MoviesController {
         return movieRepository.save(movie);
 
     }
+    @PutMapping("/movies/{id}/return")
+    public Movie clearMovieRented(@PathVariable Long id) {
+        Movie movie = movieRepository.findById(id).orElseThrow(MoviesNotFoundException::new);
+        movie.setRented(null);
+        movie.setBooked(false);
+        return movieRepository.save(movie);
+
+    }
 
 }

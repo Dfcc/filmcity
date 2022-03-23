@@ -15,8 +15,8 @@ public class Movie {
     private int year;
     @Lob
     private String synopsis;
-    private String renter;
-    private boolean booked;
+    private String renter = null;
+    private boolean booked = false;
 
     public Movie() { }
 
