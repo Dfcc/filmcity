@@ -8,14 +8,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,29 +49,67 @@ class IntegrationTests {
                 .andExpect(jsonPath("$[0].director", equalTo("Steven Spielberg")))
                 .andExpect(jsonPath("$[0].year", equalTo(1993)))
                 .andExpect(jsonPath("$[0].synopsis", equalTo("A wealthy entrepreneur secretly creates a theme park featuring living dinosaurs drawn from prehistoric DNA.")))
+                .andExpect(jsonPath("$[0].renter", equalTo(null)))
+                .andExpect(jsonPath("$[0].booked", equalTo(false)))
                 .andExpect(jsonPath("$[1].title", equalTo("Ratatouille")))
                 .andExpect(jsonPath("$[1].coverImage", equalTo("https://www.themoviedb.org/t/p/w600_and_h900_bestv2/npHNjldbeTHdKKw28bJKs7lzqzj.jpg")))
                 .andExpect(jsonPath("$[1].director", equalTo("Brad Bird")))
                 .andExpect(jsonPath("$[1].year", equalTo(2007)))
                 .andExpect(jsonPath("$[1].synopsis", equalTo("Remy, a resident of Paris, appreciates good food and has quite a sophisticated palate. He would love to become a chef so he can create and enjoy culinary masterpieces to his heart's delight. The only problem is, Remy is a rat.")))
+                .andExpect(jsonPath("$[1].renter", equalTo(null)))
+                .andExpect(jsonPath("$[1].booked", equalTo(false)))
                 .andDo(print());
     }
 
-    private void addSampleMovies() {
+    public void addSampleMovies() {
         List<Movie> movies = List.of(
                 new Movie("Jurassic Park",
                         "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/oU7Oq2kFAAlGqbU4VoAE36g4hoI.jpg",
                         "Steven Spielberg",
                         1993,
-                        "A wealthy entrepreneur secretly creates a theme park featuring living dinosaurs drawn from prehistoric DNA.","none",false),
+                        "A wealthy entrepreneur secretly creates a theme park featuring living dinosaurs drawn from prehistoric DNA.",
+                        null,
+                        false),
                 new Movie("Ratatouille",
                         "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/npHNjldbeTHdKKw28bJKs7lzqzj.jpg",
                         "Brad Bird",
                         2007,
-                        "Remy, a resident of Paris, appreciates good food and has quite a sophisticated palate. He would love to become a chef so he can create and enjoy culinary masterpieces to his heart's delight. The only problem is, Remy is a rat.","none",false)
+                        "Remy, a resident of Paris, appreciates good food and has quite a sophisticated palate. He would love to become a chef so he can create and enjoy culinary masterpieces to his heart's delight. The only problem is, Remy is a rat.",
+                        null,
+                        false)
         );
 
         movieRepository.saveAll(movies);
+    }
+    @Test
+    void deleteMovieById() throws Exception {
+        Movie movie = movieRepository.save(new Movie("Jurassic Park", "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/oU7Oq2kFAAlGqbU4VoAE36g4hoI.jpg", "Steven Spielberg", 1993, "A wealthy entrepreneur secretly creates a theme park featuring living dinosaurs drawn from prehistoric DNA.", null, false));
+        mockMvc.perform(delete("/movies/"+ movie.getId()))
+                .andExpect(status().isOk());
+        List<Movie> movies = movieRepository.findAll();
+        assertThat(movies, not(contains(allOf(
+                hasProperty("title", is("Jurassic Park")),
+                hasProperty("coverImage", is("https://www.themoviedb.org/t/p/w600_and_h900_bestv2/oU7Oq2kFAAlGqbU4VoAE36g4hoI.jpg"))
+        ))));
+    }
+
+    @Test
+    void allowsToModifyAMovie() throws Exception {
+        Movie movie = movieRepository.save(new Movie("Jurassic Park", "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/oU7Oq2kFAAlGqbU4VoAE36g4hoI.jpg", "Steven Spielberg", 1993, "A wealthy entrepreneur secretly creates a theme park featuring living dinosaurs drawn from prehistoric DNA.", null, false));
+
+        mockMvc.perform(put("/movies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{" +
+                        "\"id\": \"" + movie.getId() + "\", " +
+                        "\"title\": \"Jurassic Park\", " +
+                        "\"coverImage\": \"https://www.themoviedb.org/t/p/w600_and_h900_bestv2/oU7Oq2kFAAlGqbU4VoAE36g4hoI.jpg\" }")
+        ).andExpect(status().isOk());
+
+        List<Movie> movies = movieRepository.findAll();
+
+        assertThat(movies, hasSize(1));
+        assertThat(movies.get(0).getTitle(), equalTo("Jurassic Park"));
+        assertThat(movies.get(0).getCoverImage(), equalTo("https://www.themoviedb.org/t/p/w600_and_h900_bestv2/oU7Oq2kFAAlGqbU4VoAE36g4hoI.jpg"));
     }
 
 }
