@@ -81,11 +81,11 @@ public class Movie {
         this.synopsis = synopsis;
     }
 
-    public String getRented() {
+    public String getRenter() {
         return renter;
     }
 
-    public void setRented(String renter) {
+    public void setRenter(String renter) {
         this.renter = renter;
     }
 
