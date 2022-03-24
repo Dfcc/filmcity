@@ -17,10 +17,22 @@ public class Movie {
     private String synopsis;
     private String renter = null;
     private boolean booked = false;
+    private int rating = 0;
+    private Double score;
 
     public Movie() { }
 
-    public Movie(String title, String coverImage, String director, int year, String synopsis, String renter, Boolean booked) {
+    public Movie(String title,
+                 String coverImage,
+                 String director,
+                 int year,
+                 String synopsis,
+                 String renter,
+                 Boolean booked,
+                 int rating,
+                 Double score
+
+    ) {
         this.title = title;
         this.coverImage = coverImage;
         this.director = director;
@@ -28,6 +40,9 @@ public class Movie {
         this.synopsis = synopsis;
         this.renter = renter;
         this.booked = booked;
+        this.rating = rating;
+        this.score = score;
+
 
     }
 
@@ -70,4 +85,15 @@ public class Movie {
     }
 
     public void setBooked(boolean booked) { this.booked = booked; }
+
+    public int getRatting() {
+        return rating;
+    }
+    public void setRatting(int rating) { this.rating = rating; }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) { this.score = score; }
 }

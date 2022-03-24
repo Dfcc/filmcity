@@ -45,31 +45,7 @@ public class MoviesController {
         movieRepository.findById(movie.getId()).orElseThrow(MoviesNotFoundException::new);
         return movieRepository.save(movie);
     }
-    /*@PutMapping("/movies/{id}/book?renter={renter}")
-    public Movie updateMovieById(@PathVariable Long id, @PathVariable String renter) {
-        Movie movie = movieRepository.findById(id).orElseThrow(MoviesNotFoundException::new);
-        movie.setRented(renter);
-        movie.setBooked(true);
-        return movieRepository.save(movie);
 
-    }*/
-    /*@PutMapping("/movies/{id}/{booked}?renter={renter}")
-    public Movie updateMovieRented(@PathVariable Long id, @PathVariable String renter) {
-        Movie movie = movieRepository.findById(id).orElseThrow(MoviesNotFoundException::new);
-        movie.setRented(renter);
-        movie.setBooked(true);
-        return movieRepository.save(movie);
-
-    }*/
-    /* test
-    @PutMapping("/movies/{id}/booked?renter={renter}")
-    public Movie updateMovieRented(@PathVariable Long id, @RequestParam String renter) {
-        Movie movie = movieRepository.findById(id).orElseThrow(MoviesNotFoundException::new);
-        movie.setRented(renter);
-        movie.setBooked(true);
-        return movieRepository.save(movie);
-
-    }*/
     @PutMapping("/movies/{id}/book")
     public Movie updateMovieRented(@PathVariable Long id, @RequestParam (value = "renter")String renter) {
         Movie movie = movieRepository.findById(id).orElseThrow(MoviesNotFoundException::new);
@@ -86,5 +62,19 @@ public class MoviesController {
         return movieRepository.save(movie);
 
     }
+    @PutMapping("/movies/{id}/rating")
+    public Movie rateMovie(@PathVariable Long id,@RequestBody {
+        Movie movie = movieRepository.findById(id).orElseThrow(MoviesNotFoundException::new);
+        if(rating == 0 || rating >= 6){
+            throw new IllegalArgumentException("Ratting must be between 0 and 5, inclusive");
+        }else{
+            return movie.save(movie);
+        }
+
+
+    }
+
+
+
 
 }
