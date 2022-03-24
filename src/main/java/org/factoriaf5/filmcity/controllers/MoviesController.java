@@ -88,4 +88,18 @@ public class MoviesController {
     }
     // añadir cosas
 
+    /*public Movie updateMovieById(@RequestBody Movie movie) {
+        movieRepository.findById(movie.getId()).orElseThrow(MoviesNotFoundException::new);
+        return movieRepository.save(movie);*/
+    @PutMapping("/movies/{id}/rating")
+    public Movie updateRatingById(@PathVariable Long id,@RequestBody Movie movie) {
+        Movie movieToEdit = movieRepository.findById(id).orElseThrow(MoviesNotFoundException::new);
+        /*if(movie.getScore() >=0 && movie.getScore() <=5){
+            movieToEdit.setScore(movie.getScore());
+        }*/
+        movieToEdit.setScore(movie.getScore());
+        return movieRepository.save(movieToEdit);
+    }
+
+
 }
