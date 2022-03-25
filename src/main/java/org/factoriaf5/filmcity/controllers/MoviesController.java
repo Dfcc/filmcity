@@ -45,31 +45,7 @@ public class MoviesController {
         movieRepository.findById(movie.getId()).orElseThrow(MoviesNotFoundException::new);
         return movieRepository.save(movie);
     }
-    /*@PutMapping("/movies/{id}/book?renter={renter}")
-    public Movie updateMovieById(@PathVariable Long id, @PathVariable String renter) {
-        Movie movie = movieRepository.findById(id).orElseThrow(MoviesNotFoundException::new);
-        movie.setRented(renter);
-        movie.setBooked(true);
-        return movieRepository.save(movie);
 
-    }*/
-    /*@PutMapping("/movies/{id}/{booked}?renter={renter}")
-    public Movie updateMovieRented(@PathVariable Long id, @PathVariable String renter) {
-        Movie movie = movieRepository.findById(id).orElseThrow(MoviesNotFoundException::new);
-        movie.setRented(renter);
-        movie.setBooked(true);
-        return movieRepository.save(movie);
-
-    }*/
-    /* test
-    @PutMapping("/movies/{id}/booked?renter={renter}")
-    public Movie updateMovieRented(@PathVariable Long id, @RequestParam String renter) {
-        Movie movie = movieRepository.findById(id).orElseThrow(MoviesNotFoundException::new);
-        movie.setRented(renter);
-        movie.setBooked(true);
-        return movieRepository.save(movie);
-
-    }*/
     @PutMapping("/movies/{id}/book")
     public Movie updateMovieRented(@PathVariable Long id, @RequestParam (value = "renter")String renter) {
         Movie movie = movieRepository.findById(id).orElseThrow(MoviesNotFoundException::new);
@@ -86,18 +62,13 @@ public class MoviesController {
         return movieRepository.save(movie);
 
     }
-    // añadir cosas
 
-    /*public Movie updateMovieById(@RequestBody Movie movie) {
-        movieRepository.findById(movie.getId()).orElseThrow(MoviesNotFoundException::new);
-        return movieRepository.save(movie);*/
     @PutMapping("/movies/{id}/rating")
     public Movie updateRatingById(@PathVariable Long id,@RequestBody Movie movie) {
         Movie movieToEdit = movieRepository.findById(id).orElseThrow(MoviesNotFoundException::new);
         if(movie.getScore() >=0 && movie.getScore() <=5){
             movieToEdit.setScore(movie.getScore());
         }
-        /*movieToEdit.setScore(movie.getScore());*/
         return movieRepository.save(movieToEdit);
     }
 
