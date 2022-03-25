@@ -66,8 +66,9 @@ public class MoviesController {
     @PutMapping("/movies/{id}/rating")
     public Movie updateRatingById(@PathVariable Long id,@RequestBody Movie movie) {
         Movie movieToEdit = movieRepository.findById(id).orElseThrow(MoviesNotFoundException::new);
-        if(movie.getScore() >=0 && movie.getScore() <=5){
-            movieToEdit.setScore(movie.getScore());
+        int newScore = movie.getScore();
+        if(newScore >=0 && newScore <=5){
+            movieToEdit.setScore(newScore);
         }
         return movieRepository.save(movieToEdit);
     }
